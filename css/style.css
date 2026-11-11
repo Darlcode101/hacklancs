@@ -327,6 +327,11 @@ h1 {
 /* Apply */
 .apply { background: var(--navy-900); border-top: var(--px) solid var(--purple-500); }
 
+/* Tito's widget is designed for a light page, so it sits on a pale panel */
+.tickets { background: #f4ecd8; color: #1a163f; --line: var(--window); padding: 20px; margin: 28px 0 16px; text-align: left; min-height: 120px; }
+.tickets a { color: #3d2e6b; }
+[hidden] { display: none !important; }
+
 /* Footer */
 .footer { background: #07061a; padding: 40px 0; color: var(--muted); font-size: 1rem; }
 .footer__grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 28px; }

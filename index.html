@@ -191,15 +191,23 @@
 
     <!-- ───────────── Apply ───────────── -->
     <section class="section apply" id="apply">
-      <div class="wrap wrap--narrow center">
+      <!-- Shown until a Tito event is set in js/site.js -->
+      <div class="wrap wrap--narrow center" id="apply-soon">
         <p class="eyebrow">Ready, player one?</p>
         <h2>Applications open soon</h2>
         <p class="lead">Register your interest and you'll be the first to know when applications open and the dates are confirmed.</p>
-        <!-- TODO: point this at the application form when it exists -->
         <div class="hero__cta">
           <a class="btn btn--primary" href="mailto:hello@hacklancs.com?subject=HackLancs%20%E2%80%94%20register%20my%20interest">Register interest</a>
           <a class="btn btn--ghost" href="mailto:sponsors@hacklancs.com?subject=Sponsoring%20HackLancs">Sponsor the event</a>
         </div>
+      </div>
+      <!-- Shown once a Tito event is set: sign-up happens here through Tito -->
+      <div class="wrap wrap--narrow center" id="apply-tito" hidden>
+        <p class="eyebrow">Ready, player one?</p>
+        <h2>Sign up</h2>
+        <p class="lead">Grab your free ticket below. Sign-up is handled by Tito.</p>
+        <div class="tickets px-box" id="tito-mount"></div>
+        <p class="note">Widget not loading? <a id="tito-link" href="https://ti.to/">Sign up on Tito instead</a>.</p>
       </div>
     </section>
   </main>
