@@ -175,6 +175,36 @@ h1 {
 
 /* ── Sections ── */
 .section { position: relative; padding: clamp(64px, 10vw, 112px) 0; scroll-margin-top: var(--nav-h); }
+.section > .wrap, .section > .aqueduct { position: relative; z-index: 1; }
+
+/* ── The canal ──
+ * Picks up from the river under the aqueduct and winds down the page: a band of
+ * water across the foot of each section, joined on wide screens by a channel that
+ * alternates between the left and right margins. */
+.section:has(> .canal) { padding-bottom: calc(clamp(64px, 10vw, 112px) + var(--px) * 14); }
+.canal { --bank: calc(var(--px) * 2); --cw: calc(var(--px) * 10); position: absolute; inset: 0; pointer-events: none; isolation: isolate; }
+.canal i { position: absolute; background-color: #1a2356; }
+.canal i::before { content: ""; position: absolute; z-index: -1; background: #574b80; box-shadow: inset 0 0 0 var(--px) #7c6fa3; }
+.canal__h {
+  left: 0; right: 0; bottom: var(--bank); height: var(--cw);
+  background-image: var(--water-h, none);
+  animation: canal-right 16s steps(64) infinite;
+}
+.canal__h::before { inset: calc(var(--bank) * -1) 0; }
+.canal--right .canal__h { animation-name: canal-left; }
+.canal__v {
+  display: none;
+  top: calc(var(--bank) * -1); bottom: var(--bank); width: var(--cw);
+  background-image: var(--water-v, none);
+  animation: canal-down 16s steps(64) infinite;
+}
+.canal__v::before { inset: 0 calc(var(--bank) * -1); }
+.canal--left .canal__v { left: calc((100% - 1080px) / 4 - var(--cw) / 2); }
+.canal--right .canal__v { right: calc((100% - 1080px) / 4 - var(--cw) / 2); }
+@media (min-width: 1320px) { .canal__v { display: block; } }
+@keyframes canal-right { to { background-position-x: calc(var(--px) * 64); } }
+@keyframes canal-left  { to { background-position-x: calc(var(--px) * -64); } }
+@keyframes canal-down  { to { background-position-y: calc(var(--px) * 64); } }
 
 /* About: a castle wall */
 .about {
@@ -190,29 +220,17 @@ h1 {
           mask: repeating-linear-gradient(90deg, #000 0 calc(var(--px) * 6), transparent 0 calc(var(--px) * 10));
   z-index: 2;
 }
-.about__grid { display: grid; grid-template-columns: 1fr auto; gap: 48px; align-items: center; }
-.about__gate { justify-self: center; }
 .facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 48px; }
 .facts li { background: var(--navy-800); padding: 18px 20px; }
 .facts strong { display: block; font-family: var(--pixel); font-size: 1.375rem; color: var(--window); line-height: 1.2; }
 .facts span { color: var(--muted); font-size: 1rem; }
 @media (max-width: 760px) {
-  .about__grid { grid-template-columns: 1fr; gap: 28px; }
   .facts { grid-template-columns: 1fr; gap: 12px; }
 }
 
 /* Schedule: a path with checkpoints */
 .schedule { background: var(--navy-800); }
-.days { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 32px; }
-.signpost {
-  display: inline-block;
-  background: #5a4136; --line: #8a6a4a;
-  color: var(--window);
-  font-size: 1.375rem; font-weight: 700;
-  padding: 4px 18px 6px;
-  margin-bottom: 8px;
-}
-.path { position: relative; padding: 14px 0 6px; }
+.path { position: relative; padding: 14px 0 6px; margin-top: 24px; max-width: 560px; }
 .path::before {            /* the dotted trail */
   content: ""; position: absolute; top: 0; bottom: 0;
   left: calc(var(--px) * 3);
@@ -240,7 +258,6 @@ h1 {
 }
 .path time { font-family: var(--pixel); font-weight: 700; color: var(--window); font-size: 1.125rem; }
 .path li.key span { font-weight: 600; }
-@media (max-width: 760px) { .days { grid-template-columns: 1fr; gap: 28px; } }
 
 /* Prizes: inventory */
 .prizes { background: var(--navy-900); }
@@ -321,4 +338,5 @@ h1 {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .btn, .dialogues summary::before { transition: none; }
+  .canal i { animation: none; }
 }

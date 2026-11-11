@@ -12,7 +12,7 @@ python3 -m http.server 4173
 
 - `index.html`: all the page content. Event details still to be confirmed are marked with `TODO` comments.
 - `css/style.css`: styles. `--px` is the size of one art pixel and is shared by the artwork and the UI borders.
-- `js/scene.js`: draws the pixel art (hero landscape, chest and gate sprites, aqueduct deck) on canvases at whole-number scale.
+- `js/scene.js`: draws the pixel art (hero landscape, chest sprites, aqueduct deck, canal water) on canvases at whole-number scale.
 - `js/site.js`: mobile menu.
 
 ## Before launch

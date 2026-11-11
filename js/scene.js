@@ -387,33 +387,14 @@
       px(g, 7, 6, 4, 5, gold); px(g, 7, 10, 4, 1, goldDark);
       px(g, 8, 8, 2, 2, INK);
     } },
-    gate: { w: 58, h: 48, draw(g) {
-      const by = 48;
-      block(g, 0, by, 58, 16, CASTLE);
-      block(g, 4, by, 14, 36, CASTLE);
-      block(g, 40, by, 14, 36, CASTLE);
-      block(g, 18, by, 22, 27, CASTLE);
-      flag(g, 10, by - 38);
-      const arch = [6, 8, 10, 10];
-      arch.forEach((w, i) => px(g, 29 - w / 2, by - 16 + i, w, 1, INK));
-      px(g, 24, by - 12, 10, 12, INK);
-      px(g, 25, by - 9, 8, 9, '#f6a65a');
-      px(g, 26, by - 6, 6, 6, LIT);
-      for (let x = 25; x < 33; x += 2) px(g, x, by - 15, 1, 7, CASTLE.dark);   // raised portcullis
-      px(g, 24, by - 9, 10, 1, CASTLE.dark);
-      for (const [x, y, w, h] of [[10, 26, 2, 4], [46, 26, 2, 4], [10, 15, 2, 3], [46, 15, 2, 3], [24, 22, 2, 3], [32, 22, 2, 3]]) {
-        px(g, x, by - y, w, h, LIT);
-      }
-    } },
   };
 
   function drawSprites(N) {
     document.querySelectorAll('canvas[data-sprite]').forEach((c) => {
       const s = SPRITES[c.dataset.sprite];
       if (!s) return;
-      const k = c.dataset.sprite === 'gate' ? N + 1 : N;   // keep whole-number scaling
       c.width = s.w; c.height = s.h;
-      c.style.width = s.w * k + 'px'; c.style.height = s.h * k + 'px';
+      c.style.width = s.w * N + 'px'; c.style.height = s.h * N + 'px';
       s.draw(c.getContext('2d'));
     });
     document.querySelectorAll('canvas[data-strip="deck"]').forEach((c) => {
@@ -434,6 +415,24 @@
     g.fillRect(0, 0, 16 * N, N); g.fillRect(0, 4 * N, 16 * N, N);
     g.fillRect(0, N, N, 3 * N); g.fillRect(8 * N, 5 * N, N, 3 * N);
     root.style.setProperty('--brick', `url(${b.toDataURL()})`);
+
+    // canal water tiles: one flowing across, one flowing down (see .canal in style.css)
+    const water = (w, h, across) => {
+      const c = document.createElement('canvas');
+      c.width = w * N; c.height = h * N;
+      const cg = c.getContext('2d'), rand = rng(across ? 31 : 47);
+      for (let i = 0; i < 26; i++) {
+        const along = rand() * 64 | 0, cross = 1 + (rand() * 8 | 0), len = 2 + (rand() * 6 | 0);
+        cg.fillStyle = rand() < 0.15 ? '#b56f95' : (rand() < 0.5 ? '#3f55a0' : '#2c3a7c');
+        for (const o of [0, -64]) {                        // wrap so the tile repeats cleanly
+          if (across) cg.fillRect((along + o) * N, cross * N, len * N, N);
+          else cg.fillRect(cross * N, (along + o) * N, N, len * N);
+        }
+      }
+      return `url(${c.toDataURL()})`;
+    };
+    root.style.setProperty('--water-h', water(64, 10, true));
+    root.style.setProperty('--water-v', water(10, 64, false));
   }
 
   /* ── Boot ─────────────────────────────────────────────────────── */

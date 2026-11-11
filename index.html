@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>HackLancs · Lancaster's student hackathon</title>
-  <meta name="description" content="HackLancs is a student hackathon at Lancaster University. A weekend to build something worth showing.">
+  <meta name="description" content="HackLancs is a student hackathon at Lancaster University. One day to build something worth showing.">
   <meta name="theme-color" content="#0d0b26">
   <meta property="og:title" content="HackLancs">
-  <meta property="og:description" content="A weekend to build something worth showing. Lancaster University.">
+  <meta property="og:description" content="A day to build something worth showing. Lancaster University.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://hacklancs.com/">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Crect width='8' height='8' fill='%230d0b26'/%3E%3Cpath fill='%23bcaed6' d='M1 1h1v1h1V1h2v1h1V1h1v6H1z'/%3E%3Cpath fill='%23ffd36b' d='M3 4h2v3H3z'/%3E%3C/svg%3E">
@@ -42,7 +42,7 @@
         <h1>HackLancs</h1>
         <!-- TODO: replace with confirmed dates -->
         <p class="hero__meta"><span>Lancaster University</span> <span class="dot" aria-hidden="true">·</span> <span>Dates to be announced</span></p>
-        <p class="hero__tag">A weekend to build something worth showing.</p>
+        <p class="hero__tag">One day to build something worth showing.</p>
         <div class="hero__cta">
           <a class="btn btn--primary" href="#apply">Apply</a>
           <a class="btn btn--ghost" href="#sponsors">Sponsor the event</a>
@@ -52,21 +52,21 @@
 
     <!-- ───────────── About: castle walls and a gate ───────────── -->
     <section class="section about" id="about">
+      <div class="canal canal--left" aria-hidden="true"><i class="canal__v"></i><i class="canal__h"></i></div>
       <div class="battlements" aria-hidden="true"></div>
-      <div class="wrap about__grid">
+      <div class="wrap">
         <div>
           <p class="eyebrow">Through the gate</p>
           <h2>About the event</h2>
-          <p class="lead">HackLancs is a new student hackathon at Lancaster University. Turn up with an idea or without one, find a team, and spend the weekend building something you'd be proud to demo.</p>
-          <p>Software, hardware, games, tools, something strange: if you can show it on Sunday, it counts. There are mentors when you get stuck, workshops if you want to learn something new, and food so you never have to leave your flow.</p>
+          <p class="lead">HackLancs is a new student hackathon at Lancaster University. Turn up with an idea or without one, find a team, and spend the day building something you'd be proud to demo.</p>
+          <p>Software, hardware, games, tools, something strange: if you can show it by the evening, it counts. There are mentors when you get stuck, workshops if you want to learn something new, and food so you never have to leave your flow.</p>
           <p>You don't need to have been to a hackathon before. Plenty of people ship their first ever project at one.</p>
         </div>
-        <canvas class="sprite about__gate" data-sprite="gate" aria-hidden="true"></canvas>
       </div>
       <div class="wrap">
         <!-- TODO: confirm each of these before launch -->
         <ul class="facts">
-          <li class="px-box"><strong>One weekend</strong><span>From first idea to live demo</span></li>
+          <li class="px-box"><strong>One day</strong><span>From first idea to live demo</span></li>
           <li class="px-box"><strong>Free to attend</strong><span>Food and drink included</span></li>
           <li class="px-box"><strong>All skill levels</strong><span>First-timers very welcome</span></li>
         </ul>
@@ -75,41 +75,30 @@
 
     <!-- ───────────── Schedule: a path with checkpoints ───────────── -->
     <section class="section schedule" id="schedule">
+      <div class="canal canal--right" aria-hidden="true"><i class="canal__v"></i><i class="canal__h"></i></div>
       <div class="wrap">
         <p class="eyebrow">Follow the path</p>
         <h2>Schedule</h2>
         <!-- TODO: replace with the confirmed timetable -->
         <p class="note">Provisional. Times will be confirmed closer to the event.</p>
-        <div class="days">
-          <div class="day">
-            <h3 class="signpost px-box">Saturday</h3>
-            <ol class="path">
-              <li><time>09:30</time><span>Doors open and check-in</span></li>
-              <li class="key"><time>10:30</time><span>Opening ceremony</span></li>
-              <li><time>11:30</time><span>Team formation</span></li>
-              <li class="key"><time>12:00</time><span>Hacking begins</span></li>
-              <li><time>13:00</time><span>Lunch</span></li>
-              <li><time>14:00</time><span>Workshops and sponsor challenges</span></li>
-              <li><time>18:30</time><span>Dinner</span></li>
-              <li><time>00:00</time><span>Midnight snacks</span></li>
-            </ol>
-          </div>
-          <div class="day">
-            <h3 class="signpost px-box">Sunday</h3>
-            <ol class="path">
-              <li><time>08:00</time><span>Breakfast</span></li>
-              <li class="key"><time>12:00</time><span>Hacking ends, submissions close</span></li>
-              <li><time>12:30</time><span>Lunch</span></li>
-              <li><time>13:00</time><span>Demos and judging</span></li>
-              <li class="key"><time>14:30</time><span>Closing ceremony and prizes</span></li>
-            </ol>
-          </div>
-        </div>
+        <ol class="path">
+          <li><time>09:00</time><span>Doors open and check-in</span></li>
+          <li class="key"><time>10:00</time><span>Opening ceremony</span></li>
+          <li><time>10:30</time><span>Team formation</span></li>
+          <li class="key"><time>11:00</time><span>Hacking begins</span></li>
+          <li><time>13:00</time><span>Lunch</span></li>
+          <li><time>14:00</time><span>Workshops and sponsor challenges</span></li>
+          <li><time>18:00</time><span>Dinner</span></li>
+          <li class="key"><time>19:00</time><span>Hacking ends, submissions close</span></li>
+          <li><time>19:30</time><span>Demos and judging</span></li>
+          <li class="key"><time>21:00</time><span>Closing ceremony and prizes</span></li>
+        </ol>
       </div>
     </section>
 
     <!-- ───────────── Prizes: inventory panel ───────────── -->
     <section class="section prizes" id="prizes">
+      <div class="canal canal--left" aria-hidden="true"><i class="canal__v"></i><i class="canal__h"></i></div>
       <div class="wrap">
         <p class="eyebrow">The hoard</p>
         <h2>Prizes and challenges</h2>
@@ -128,10 +117,11 @@
 
     <!-- ───────────── Sponsors: banners on the aqueduct ───────────── -->
     <section class="section sponsors" id="sponsors">
+      <div class="canal canal--right" aria-hidden="true"><i class="canal__v"></i><i class="canal__h"></i></div>
       <div class="wrap">
         <p class="eyebrow">Hang your banner</p>
         <h2>Sponsors</h2>
-        <p class="lead">HackLancs puts your team in a room with motivated student builders for a whole weekend. Set a challenge, run a workshop, meet the people you'd like to hire.</p>
+        <p class="lead">HackLancs puts your team in a room with motivated student builders for a full day. Set a challenge, run a workshop, meet the people you'd like to hire.</p>
       </div>
       <div class="aqueduct">
         <canvas class="aqueduct__deck" data-strip="deck" aria-hidden="true"></canvas>
@@ -149,6 +139,7 @@
 
     <!-- ───────────── FAQs: dialogue boxes ───────────── -->
     <section class="section faq" id="faq">
+      <div class="canal canal--left" aria-hidden="true"><i class="canal__v"></i><i class="canal__h"></i></div>
       <div class="wrap wrap--narrow">
         <p class="eyebrow">Ask a local</p>
         <h2>FAQs</h2>
@@ -156,7 +147,7 @@
         <div class="dialogues">
           <details class="px-box" open>
             <summary>What is a hackathon?</summary>
-            <p>A weekend-long event where you team up and build a project from scratch, then demo it to judges and everyone else at the end. Think of it as a very friendly deadline.</p>
+            <p>A one-day event where you team up and build a project from scratch, then demo it to judges and everyone else at the end. Think of it as a very friendly deadline.</p>
           </details>
           <details class="px-box">
             <summary>Who can attend?</summary>
@@ -164,7 +155,7 @@
           </details>
           <details class="px-box">
             <summary>How much does it cost?</summary>
-            <p>Nothing. Attending is free, and food and drink are provided throughout the weekend.</p>
+            <p>Nothing. Attending is free, and food and drink are provided throughout the day.</p>
           </details>
           <details class="px-box">
             <summary>Do I need to know how to code?</summary>
@@ -180,7 +171,7 @@
           </details>
           <details class="px-box">
             <summary>What should I bring?</summary>
-            <p>A laptop and charger, student ID, and anything that helps you stay comfortable overnight, such as a jumper or a sleeping bag. Bring any hardware you want to hack on.</p>
+            <p>A laptop and charger, your student ID, and any hardware you want to hack on. It is a long day, so a water bottle and a jumper are a good idea.</p>
           </details>
           <details class="px-box">
             <summary>Where is it, and how do I get there?</summary>
