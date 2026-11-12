@@ -17,7 +17,7 @@ python3 -m http.server 4173
 
 ## Before launch
 
-- Confirm dates, venue building and the schedule.
+- Confirm the venue building and the schedule (date is set: Saturday 6 March 2027).
 - Confirm the answers in the FAQs (eligibility, cost, team size).
 - Set `TITO_EVENT` in `js/site.js` to the event's Tito path to turn on sign-up.
 - Set up the `hello@` and `sponsors@` mailboxes on hacklancs.com.
