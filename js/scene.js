@@ -436,9 +436,9 @@
     c.width = c.height = 64;
     const g = c.getContext('2d'), rand = rng(across ? 31 : 47);
     px(g, 0, 0, 64, 64, CANAL.water);
-    for (let i = 0; i < 170; i++) {
-      const along = rand() * 64 | 0, cross = rand() * 64 | 0, len = 2 + (rand() * 6 | 0);
-      g.fillStyle = rand() < 0.15 ? '#b56f95' : (rand() < 0.5 ? '#3f55a0' : '#2c3a7c');
+    for (let i = 0; i < 95; i++) {
+      const along = rand() * 64 | 0, cross = rand() * 64 | 0, len = 3 + (rand() * 5 | 0);
+      g.fillStyle = rand() < 0.07 ? '#b56f95' : (rand() < 0.4 ? '#3f55a0' : '#2c3a7c');
       for (const o of [0, -64]) {                          // wrap so the tile repeats cleanly
         if (across) g.fillRect(along + o, cross, len, 1);
         else g.fillRect(cross, along + o, 1, len);
@@ -449,20 +449,21 @@
 
   // A small stone footbridge centred on (cx, cy). `ns` = it runs north-south, over water flowing across.
   function drawBridge(g, cx, cy, ns) {
-    const L = 20, Wd = 9;
+    const L = 22, Wd = 11;
     const r = (a, b, la, lb, col) => {                     // a = along the bridge, b = across it
-      if (ns) px(g, cx - 4 + b, cy - 10 + a, lb, la, col);
-      else px(g, cx - 10 + a, cy - 4 + b, la, lb, col);
+      if (ns) px(g, cx - 5 + b, cy - 11 + a, lb, la, col);
+      else px(g, cx - 11 + a, cy - 5 + b, la, lb, col);
     };
-    r(4, Wd, L - 8, 1, 'rgba(8, 10, 36, 0.55)');           // shadow on the water
-    r(0, -1, 3, Wd + 2, '#3d3270');                        // abutments on each bank
-    r(L - 3, -1, 3, Wd + 2, '#3d3270');
-    r(1, 0, L - 2, Wd, '#8f83b8');                         // deck
-    r(6, 1, L - 12, Wd - 2, '#a79bd0');                    // the hump catches the light
-    for (let a = 2; a < L - 2; a += 3) r(a, 1, 1, Wd - 2, '#6f6399');   // paving joints
-    r(1, 0, L - 2, 1, '#d7cff0');                          // parapets
-    r(1, Wd - 1, L - 2, 1, '#bcaed6');
-    for (let a = 1; a < L - 1; a += 4) { r(a, 0, 1, 1, '#ffd36b'); r(a, Wd - 1, 1, 1, '#574b80'); }
+    r(4, Wd, L - 8, 2, 'rgba(6, 8, 30, 0.5)');             // shadow on the water
+    r(0, 0, L, Wd, '#2a2152');                             // outline
+    r(0, 2, L, Wd - 4, '#8f83b8');                         // deck
+    r(6, 2, L - 12, Wd - 4, '#a79bd0');                    // the hump catches the light
+    for (let a = 3; a < L - 3; a += 4) r(a, 2, 1, Wd - 4, '#7f73aa');   // paving joints
+    r(1, 0, L - 2, 2, '#6a5e99'); r(1, 0, L - 2, 1, '#c9bfe6');         // lit parapet
+    r(1, Wd - 2, L - 2, 2, '#574b80'); r(1, Wd - 1, L - 2, 1, '#3d3270'); // shaded parapet
+    for (const a of [0, L - 3]) for (const b of [-1, Wd - 2]) {         // end posts with lamps
+      r(a, b, 3, 3, '#2a2152'); r(a, b, 2, 2, '#d7cff0'); r(a, b, 1, 1, '#ffd36b');
+    }
   }
 
   function buildCanal(el, N) {
@@ -486,6 +487,8 @@
     const s = left ? 1 : -1;                               // which way the water crosses
     const next = sec.nextElementSibling;
     const last = !(next && next.querySelector(':scope > .canal'));
+    const prev = sec.previousElementSibling;
+    const first = !(prev && prev.querySelector(':scope > .canal'));   // nothing upstream: enter from the page edge
     const margin = (sec.clientWidth - 1080) / 2 / N;       // gutter beside the text column
     const wide = sec.clientWidth >= 1320;
     const pts = [], bridges = [];
@@ -498,12 +501,14 @@
       const sway = Math.max(0, Math.min(4, Math.floor(margin / 2 - 9)));
       const run = yb - R, bends = Math.max(1, Math.round(run / 38));
       const xv = (y) => xin + s * sway * Math.sin(Math.PI * bends * y / run);
-      for (let y = -4; y < run; y += 0.5) pts.push([xv(y), y]);
-      for (let t = 0; t <= 1; t += 0.03) {                 // sweep round into the crossing
-        const a = t * Math.PI / 2;
-        pts.push([xin + s * R - s * R * Math.cos(a), run + R * Math.sin(a)]);
+      if (!first) {
+        for (let y = -4; y < run; y += 0.5) pts.push([xv(y), y]);
+        for (let t = 0; t <= 1; t += 0.03) {               // sweep round into the crossing
+          const a = t * Math.PI / 2;
+          pts.push([xin + s * R - s * R * Math.cos(a), run + R * Math.sin(a)]);
+        }
       }
-      const x0 = xin + s * R, x1 = last ? (s > 0 ? w + 12 : -12) : xout - s * R;
+      const x0 = first ? (s > 0 ? -12 : w + 12) : xin + s * R, x1 = last ? (s > 0 ? w + 12 : -12) : xout - s * R;
       const len = Math.abs(x1 - x0), waves = Math.max(2, Math.round(len / 44));
       const yh = (u) => yb + 2 * Math.sin(Math.PI * waves * u);
       for (let d = 0; d <= len; d += 0.5) pts.push([x0 + s * d, yh(d / len)]);
@@ -515,7 +520,7 @@
         for (let y = yb + R; y < h + 4; y += 0.5) pts.push([xout, y]);
       }
       const by = Math.round(run * 0.45);
-      if (run > 70) bridges.push([Math.round(xv(by)), by, false]);
+      if (run > 70 && !first) bridges.push([Math.round(xv(by)), by, false]);
       bridges.push([Math.round(x0 + s * len * (last ? 0.4 : 0.5)), Math.round(yh(last ? 0.4 : 0.5)), true]);
     } else {
       const yb = h - 11, phase = left ? 0 : Math.PI;
@@ -530,8 +535,8 @@
     for (let i = 0; i < pts.length; i++) {
       const [x, y] = pts[i], q = pts[Math.min(i + 1, pts.length - 1)], p = pts[Math.max(i - 1, 0)];
       const isDown = Math.abs(q[1] - p[1]) >= Math.abs(q[0] - p[0]) ? 1 : 0;
-      const xa = Math.max(0, Math.floor(x - 8)), xb = Math.min(w - 1, Math.ceil(x + 8));
-      const ya = Math.max(0, Math.floor(y - 8)), yc = Math.min(h - 1, Math.ceil(y + 8));
+      const xa = Math.max(0, Math.floor(x - 9)), xb = Math.min(w - 1, Math.ceil(x + 9));
+      const ya = Math.max(0, Math.floor(y - 9)), yc = Math.min(h - 1, Math.ceil(y + 9));
       for (let yy = ya; yy <= yc; yy++) for (let xx = xa; xx <= xb; xx++) {
         const d = Math.hypot(xx + 0.5 - x, yy + 0.5 - y), k = yy * w + xx;
         if (d < dist[k]) { dist[k] = d; down[k] = isDown; }
@@ -542,10 +547,28 @@
     const gd = st.maskDown.getContext('2d'), ga = st.maskAcross.getContext('2d'), go = st.over.getContext('2d');
     for (let k = 0; k < dist.length; k++) {
       const d = dist[k];
-      if (d > 7) continue;
+      if (d > 8) continue;
       const x = k % w, y = (k - x) / w;
-      if (d <= 5) px(down[k] ? gd : ga, x, y, 1, 1, '#000');
-      else px(go, x, y, 1, 1, d <= 6 ? CANAL.bank : CANAL.edge);
+      if (d <= 5) {
+        px(down[k] ? gd : ga, x, y, 1, 1, '#000');
+        if (d > 4) px(go, x, y, 1, 1, 'rgba(6, 8, 30, 0.4)');          // deeper shade under the bank
+      } else if (d <= 7) px(go, x, y, 1, 1, d <= 6 ? CANAL.bank : CANAL.edge);
+      else px(go, x, y, 1, 1, 'rgba(0, 0, 0, 0.22)');                   // seats the bank on the ground
+    }
+    // lily pads at the water's edge and reeds on the bank, away from the bridges
+    const rand = rng(w * 7 + h);
+    for (let i = 30 + (rand() * 40 | 0); i < pts.length - 30; i += 50 + (rand() * 90 | 0)) {
+      const [x, y] = pts[i], q = pts[i + 1];
+      const tx = q[0] - x, ty = q[1] - y, tl = Math.hypot(tx, ty) || 1, side = rand() < 0.5 ? 1 : -1;
+      const nx = -ty / tl * side, ny = tx / tl * side;
+      if (bridges.some(([bx, by]) => Math.hypot(bx - x, by - y) < 18)) continue;
+      if (rand() < 0.55) {
+        const lx = Math.round(x + nx * 3), ly = Math.round(y + ny * 3);
+        px(go, lx, ly, 2, 1, '#4f8f72'); px(go, lx, ly, 1, 1, '#86c9a1');
+      } else {
+        const rx = Math.round(x + nx * 6.5), ry = Math.round(y + ny * 6.5);
+        px(go, rx, ry - 2, 1, 3, '#5fa07f'); px(go, rx + 1, ry - 1, 1, 2, '#4f8f72'); px(go, rx, ry - 3, 1, 1, '#c98f6b');
+      }
     }
     bridges.forEach(([x, y, ns]) => drawBridge(go, x, y, ns));
     st.dir = s;

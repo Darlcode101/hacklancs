@@ -188,8 +188,14 @@ h1 {
 
 /* About: a castle wall */
 .about {
-  background-color: #2a2152;
-  background-image: var(--brick, none);
+  /* the wall stops short of the section's foot: a stone plinth, then open ground for the canal */
+  --foot: calc(var(--px) * 27);
+  background:
+    linear-gradient(#4a3f80, #4a3f80) left 0 bottom var(--foot) / 100% calc(var(--px) * 2) no-repeat,
+    linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)) left 0 bottom calc(var(--foot) - var(--px)) / 100% var(--px) no-repeat,
+    linear-gradient(var(--navy-800), var(--navy-800)) left 0 bottom 0 / 100% var(--foot) no-repeat,
+    var(--brick, none),
+    #2a2152;
 }
 .battlements {
   position: absolute; left: 0; right: 0; top: calc(var(--px) * -4); height: calc(var(--px) * 4);
