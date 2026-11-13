@@ -115,85 +115,55 @@
     slit(3, 6); slit(44, 4); slit(62, 4);
   }
 
-  // Ashton Memorial: stair and terrace, porticoed lower storey with corner cupolas,
-  // colonnaded upper storey, drum, ribbed copper dome and lantern.
-  // cx is the centre line; about 46 wide and 61 tall.
+  // Ashton Memorial: stepped base, colonnaded storeys, copper dome and lantern.
+  // cx is the centre line; about 44 wide and 58 tall.
   function drawMemorial(g, cx, by, wins) {
     const cr = (w, up, h, c) => px(g, cx - w / 2, by - up - h, w, h, c);
-    const at = (dx, up, w, h, c) => px(g, cx + dx, by - up - h, w, h, c);
-    const w = (dx, up, ww, hh) => wins.push({ x: cx + dx, y: by - up - hh, w: ww, h: hh });
-    const SHADE = '#a394c6', DEEP = '#6f609b', DOOR = '#2a2050';
+    const w = (dx, up, ww, hh) => wins.push({ x: cx + dx, y: by - up - hh, w: ww, h: hh, steady: true });   // lit, never flickers
+    const colonnade = (wd, up, h) => {
+      cr(wd, up, h, PALE.mid);
+      for (let i = 1; i < wd - 3; i += 3) px(g, cx - wd / 2 + i, by - up - h, 1, h, PALE.light);
+      px(g, cx + wd / 2 - 3, by - up - h, 3, h, PALE.dark);
+    };
 
-    cr(46, 0, 2, PALE.dark); cr(46, 1, 1, PALE.mid);        // terrace steps
-    cr(40, 2, 2, PALE.mid);  cr(40, 3, 1, PALE.light);
-    cr(34, 4, 2, PALE.dark); cr(34, 5, 1, PALE.mid);
-    cr(10, 0, 6, PALE.light);                              // the stair up the middle
-    for (const up of [1, 3, 5]) cr(10, up, 1, SHADE);
-    at(-6, 0, 1, 6, PALE.dark); at(5, 0, 1, 6, PALE.dark);
+    cr(44, 0, 2, PALE.dark); cr(44, 1, 1, PALE.mid);       // steps
+    cr(38, 2, 2, PALE.mid);  cr(38, 3, 1, PALE.light);
+    cr(32, 4, 2, PALE.dark); cr(32, 5, 1, PALE.mid);
 
-    cr(30, 6, 12, PALE.mid);                               // lower storey
-    at(-15, 6, 3, 12, PALE.light); at(12, 6, 3, 12, SHADE); // corner piers
-    at(13, 6, 2, 12, PALE.dark);
-    cr(24, 10, 1, SHADE);                                  // rustication
-    for (const dx of [-11, 9]) {                           // arched side windows
-      at(dx - 1, 8, 4, 6, PALE.dark); at(dx, 14, 2, 1, PALE.dark);
-      w(dx, 8, 2, 5);
-    }
-    cr(12, 6, 12, PALE.light);                             // portico
-    for (const dx of [-6, -4, 3, 5]) at(dx, 6, 1, 12, '#f3ecfa');
-    at(-5, 6, 1, 12, SHADE); at(4, 6, 1, 12, SHADE);
-    at(-2, 6, 4, 8, DOOR); at(-1, 14, 2, 1, DOOR);
-    w(-1, 6, 2, 6);
-    cr(34, 18, 1, PALE.dark);                              // entablature and cornice
-    cr(36, 19, 1, PALE.light);
-    for (let dx = -17; dx < 17; dx += 2) at(dx, 18, 1, 1, SHADE);
+    colonnade(30, 6, 12);                                  // lower storey
+    px(g, cx - 2, by - 14, 4, 8, '#2a2050');
+    w(-1, 6, 2, 5); w(-10, 9, 2, 5); w(8, 9, 2, 5);
+    cr(34, 18, 1, PALE.dark); cr(34, 19, 1, PALE.light);
 
-    for (let dx = -15; dx < 15; dx += 2) at(dx, 20, 1, 2, PALE.mid);   // balustrade
-    cr(30, 22, 1, PALE.light);
-    for (const dx of [-17, 11]) {                          // corner cupolas
-      at(dx + 1, 20, 4, 4, PALE.mid); at(dx + 1, 20, 1, 4, PALE.light); at(dx + 4, 20, 1, 4, PALE.dark);
-      at(dx + 2, 21, 2, 2, DOOR);
-      at(dx, 24, 6, 1, COPPER.dark);
-      at(dx + 1, 25, 4, 1, COPPER.mid); at(dx + 1, 25, 1, 1, COPPER.light);
-      at(dx + 2, 26, 2, 1, COPPER.mid);
-      at(dx + 2, 27, 1, 2, PALE.light);
+    for (const dx of [-15, 9]) {                           // corner cupolas
+      px(g, cx + dx + 1, by - 23, 4, 3, PALE.mid);
+      px(g, cx + dx, by - 24, 6, 1, COPPER.mid);
+      px(g, cx + dx + 1, by - 25, 4, 1, COPPER.mid);
+      px(g, cx + dx + 2, by - 26, 2, 1, COPPER.light);
     }
 
-    cr(20, 20, 10, DEEP);                                  // upper storey: columns before shadow
-    for (const dx of [-10, -7, -4, 3, 6, 9]) at(dx, 20, 1, 10, dx > 4 ? SHADE : PALE.light);
-    at(-3, 20, 6, 10, PALE.mid);                           // centre bay
-    at(-2, 21, 4, 7, DOOR); at(-1, 28, 2, 1, DOOR);
-    w(-6, 22, 2, 5); w(-1, 21, 2, 6); w(4, 22, 2, 5);
-    cr(22, 20, 1, PALE.light);
-    cr(24, 30, 1, PALE.dark); cr(26, 31, 1, PALE.light);
-    for (let dx = -12; dx < 12; dx += 2) at(dx, 30, 1, 1, SHADE);
-    for (const [wd, up] of [[10, 20], [6, 21], [2, 22]]) cr(wd, up, 1, PALE.light);   // pediment over the portico
-    cr(12, 19, 1, '#f3ecfa');
+    colonnade(20, 20, 10);                                 // upper storey
+    w(-6, 22, 2, 5); w(-1, 22, 2, 6); w(4, 22, 2, 5);
+    cr(24, 30, 1, PALE.dark); cr(24, 31, 1, PALE.light);
 
     cr(16, 32, 5, PALE.mid);                               // drum
-    for (const dx of [-8, -4, 3]) at(dx, 32, 1, 5, PALE.light);
-    at(6, 32, 2, 5, PALE.dark);
-    w(-6, 33, 1, 3); w(-1, 33, 2, 3); w(4, 33, 1, 3);
+    px(g, cx + 6, by - 37, 2, 5, PALE.dark);
+    w(-5, 33, 1, 3); w(-1, 33, 2, 3); w(4, 33, 1, 3);
     cr(18, 37, 1, PALE.light);
-    cr(20, 38, 1, COPPER.dark);
 
-    const RIB = '#4a8478';
-    for (let i = 0; i < 11; i++) {                         // dome
-      const hw = Math.round(10 * Math.sqrt(1 - (i / 11) ** 2));
-      const up = 39 + i;
-      at(-hw, up, hw * 2, 1, COPPER.mid);
-      at(-hw, up, Math.max(1, Math.round(hw / 3)), 1, COPPER.light);
-      at(hw - Math.round(hw * 0.45), up, Math.round(hw * 0.45), 1, COPPER.dark);
-      for (const k of [-0.45, 0.05, 0.5]) at(Math.round(k * hw), up, 1, 1, RIB);
+    for (let i = 0; i < 10; i++) {                         // dome
+      const hw = Math.round(9 * Math.sqrt(1 - (i / 10) ** 2));
+      const y = by - 39 - i;
+      px(g, cx - hw, y, hw * 2, 1, COPPER.mid);
+      px(g, cx - hw, y, Math.min(2, hw), 1, COPPER.light);
+      px(g, cx + hw - Math.min(3, hw), y, Math.min(3, hw), 1, COPPER.dark);
     }
-    at(-5, 45, 2, 1, '#b8e6d0'); at(-4, 46, 1, 1, '#b8e6d0');   // where the last light catches it
 
-    cr(6, 50, 1, PALE.light);                              // lantern
-    cr(4, 51, 4, PALE.mid); at(1, 51, 1, 4, PALE.dark);
-    w(-1, 52, 2, 2);
-    cr(6, 55, 1, PALE.light);
-    cr(4, 56, 1, COPPER.mid); cr(2, 57, 1, COPPER.light);
-    cr(2, 58, 3, PALE.light);
+    cr(4, 48, 4, PALE.mid);                                // lantern
+    w(-1, 49, 2, 2);
+    cr(6, 52, 1, PALE.light);
+    cr(4, 53, 1, COPPER.mid); cr(2, 54, 1, COPPER.light);
+    cr(2, 55, 3, PALE.light);
   }
 
   function drawTree(g, x, y, big) {
@@ -403,7 +373,7 @@
 
       ctx.drawImage(front, 0, 0);
 
-      for (const w of wins) px(ctx, w.x, w.y, w.w, w.h, (t + w.ph) % w.per < 3 ? DIM : LIT);
+      for (const w of wins) px(ctx, w.x, w.y, w.w, w.h, !w.steady && (t + w.ph) % w.per < 3 ? DIM : LIT);
 
       const ry = H - 10;                                   // the Lune
       px(ctx, 0, ry, W, 10, '#1a2356');
