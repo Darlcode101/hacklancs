@@ -78,7 +78,7 @@
 
     tower(10, 22, 34);                                     // keep
     tower(24, 6, 6, 34);                                   // its corner turret
-    flag(g, x + 26, by - 42);
+    flag(g, x + 26, by - 40);                              // pole stands on the turret roof
     tower(0, 10, 20);                                      // west tower
     tower(0, 66, 12);                                      // curtain wall
     for (const dx of [13, 31]) {                           // buttresses
@@ -129,6 +129,9 @@
     cr(44, 0, 2, PALE.dark); cr(44, 1, 1, PALE.mid);       // steps
     cr(38, 2, 2, PALE.mid);  cr(38, 3, 1, PALE.light);
     cr(32, 4, 2, PALE.dark); cr(32, 5, 1, PALE.mid);
+    cr(10, 0, 6, PALE.light);                              // the stair up the middle
+    for (const up of [1, 3, 5]) cr(10, up, 1, '#a394c6');
+    px(g, cx - 6, by - 6, 1, 6, PALE.dark); px(g, cx + 5, by - 6, 1, 6, PALE.dark);
 
     colonnade(30, 6, 12);                                  // lower storey
     px(g, cx - 2, by - 14, 4, 8, '#2a2050');
