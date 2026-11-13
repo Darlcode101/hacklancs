@@ -178,33 +178,13 @@ h1 {
 .section > .wrap, .section > .aqueduct { position: relative; z-index: 1; }
 
 /* ── The canal ──
- * Picks up from the river under the aqueduct and winds down the page: a band of
- * water across the foot of each section, joined on wide screens by a channel that
- * alternates between the left and right margins. */
-.section:has(> .canal) { padding-bottom: calc(clamp(64px, 10vw, 112px) + var(--px) * 14); }
-.canal { --bank: calc(var(--px) * 2); --cw: calc(var(--px) * 10); position: absolute; inset: 0; pointer-events: none; isolation: isolate; }
-.canal i { position: absolute; background-color: #1a2356; }
-.canal i::before { content: ""; position: absolute; z-index: -1; background: #574b80; box-shadow: inset 0 0 0 var(--px) #7c6fa3; }
-.canal__h {
-  left: 0; right: 0; bottom: var(--bank); height: var(--cw);
-  background-image: var(--water-h, none);
-  animation: canal-right 16s steps(64) infinite;
-}
-.canal__h::before { inset: calc(var(--bank) * -1) 0; }
-.canal--right .canal__h { animation-name: canal-left; }
-.canal__v {
-  display: none;
-  top: calc(var(--bank) * -1); bottom: var(--bank); width: var(--cw);
-  background-image: var(--water-v, none);
-  animation: canal-down 16s steps(64) infinite;
-}
-.canal__v::before { inset: 0 calc(var(--bank) * -1); }
-.canal--left .canal__v { left: calc((100% - 1080px) / 4 - var(--cw) / 2); }
-.canal--right .canal__v { right: calc((100% - 1080px) / 4 - var(--cw) / 2); }
-@media (min-width: 1320px) { .canal__v { display: block; } }
-@keyframes canal-right { to { background-position-x: calc(var(--px) * 64); } }
-@keyframes canal-left  { to { background-position-x: calc(var(--px) * -64); } }
-@keyframes canal-down  { to { background-position-y: calc(var(--px) * 64); } }
+ * Picks up from the river under the aqueduct and winds down the page. Each section
+ * holds one canvas, drawn in js/scene.js: a meandering band across the section's
+ * foot, joined on wide screens by a channel that curves down alternating margins,
+ * with small footbridges over it. */
+.section:has(> .canal) { padding-bottom: calc(clamp(64px, 10vw, 112px) + var(--px) * 20); }
+.canal { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.canal canvas { position: absolute; top: 0; left: 0; image-rendering: pixelated; }
 
 /* About: a castle wall */
 .about {
@@ -343,5 +323,4 @@ h1 {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .btn, .dialogues summary::before { transition: none; }
-  .canal i { animation: none; }
 }

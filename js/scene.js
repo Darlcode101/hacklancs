@@ -416,24 +416,189 @@
     g.fillRect(0, N, N, 3 * N); g.fillRect(8 * N, 5 * N, N, 3 * N);
     root.style.setProperty('--brick', `url(${b.toDataURL()})`);
 
-    // canal water tiles: one flowing across, one flowing down (see .canal in style.css)
-    const water = (w, h, across) => {
-      const c = document.createElement('canvas');
-      c.width = w * N; c.height = h * N;
-      const cg = c.getContext('2d'), rand = rng(across ? 31 : 47);
-      for (let i = 0; i < 26; i++) {
-        const along = rand() * 64 | 0, cross = 1 + (rand() * 8 | 0), len = 2 + (rand() * 6 | 0);
-        cg.fillStyle = rand() < 0.15 ? '#b56f95' : (rand() < 0.5 ? '#3f55a0' : '#2c3a7c');
-        for (const o of [0, -64]) {                        // wrap so the tile repeats cleanly
-          if (across) cg.fillRect((along + o) * N, cross * N, len * N, N);
-          else cg.fillRect(cross * N, (along + o) * N, N, len * N);
-        }
-      }
-      return `url(${c.toDataURL()})`;
-    };
-    root.style.setProperty('--water-h', water(64, 10, true));
-    root.style.setProperty('--water-v', water(10, 64, false));
+    drawCanals(N);
   }
+
+  /* ── Canal ────────────────────────────────────────────────────────
+   * One canvas per section, in art pixels. The course is a list of points; every
+   * pixel within 5 of it is water, the next two are bank. Water is split into
+   * stretches that run down and stretches that run across so each can flow its
+   * own way. Bridges sit on top. */
+
+  const CANAL = { water: '#1a2356', bank: '#574b80', edge: '#7c6fa3' };
+  const still = matchMedia('(prefers-reduced-motion: reduce)');
+  const canals = new Map();          // .canal element -> state
+  const scratch = document.createElement('canvas');
+  let canalStep = 0, canalScale = 0, tileDown, tileAcross;
+
+  function waterTile(across) {
+    const c = document.createElement('canvas');
+    c.width = c.height = 64;
+    const g = c.getContext('2d'), rand = rng(across ? 31 : 47);
+    px(g, 0, 0, 64, 64, CANAL.water);
+    for (let i = 0; i < 170; i++) {
+      const along = rand() * 64 | 0, cross = rand() * 64 | 0, len = 2 + (rand() * 6 | 0);
+      g.fillStyle = rand() < 0.15 ? '#b56f95' : (rand() < 0.5 ? '#3f55a0' : '#2c3a7c');
+      for (const o of [0, -64]) {                          // wrap so the tile repeats cleanly
+        if (across) g.fillRect(along + o, cross, len, 1);
+        else g.fillRect(cross, along + o, 1, len);
+      }
+    }
+    return c;
+  }
+
+  // A small stone footbridge centred on (cx, cy). `ns` = it runs north-south, over water flowing across.
+  function drawBridge(g, cx, cy, ns) {
+    const L = 20, Wd = 9;
+    const r = (a, b, la, lb, col) => {                     // a = along the bridge, b = across it
+      if (ns) px(g, cx - 4 + b, cy - 10 + a, lb, la, col);
+      else px(g, cx - 10 + a, cy - 4 + b, la, lb, col);
+    };
+    r(4, Wd, L - 8, 1, 'rgba(8, 10, 36, 0.55)');           // shadow on the water
+    r(0, -1, 3, Wd + 2, '#3d3270');                        // abutments on each bank
+    r(L - 3, -1, 3, Wd + 2, '#3d3270');
+    r(1, 0, L - 2, Wd, '#8f83b8');                         // deck
+    r(6, 1, L - 12, Wd - 2, '#a79bd0');                    // the hump catches the light
+    for (let a = 2; a < L - 2; a += 3) r(a, 1, 1, Wd - 2, '#6f6399');   // paving joints
+    r(1, 0, L - 2, 1, '#d7cff0');                          // parapets
+    r(1, Wd - 1, L - 2, 1, '#bcaed6');
+    for (let a = 1; a < L - 1; a += 4) { r(a, 0, 1, 1, '#ffd36b'); r(a, Wd - 1, 1, 1, '#574b80'); }
+  }
+
+  function buildCanal(el, N) {
+    const sec = el.parentElement;
+    const w = Math.ceil(sec.clientWidth / N), h = Math.ceil(sec.clientHeight / N);
+    if (w < 8 || h < 30) return;
+    let st = canals.get(el);
+    if (!st) {
+      const c = document.createElement('canvas');
+      el.appendChild(c);
+      st = { c, g: c.getContext('2d'), visible: true };
+      canals.set(el, st);
+      if (canalWatch) canalWatch.observe(el);
+      if (canalSize) canalSize.observe(sec);
+    }
+    st.c.width = w; st.c.height = h;
+    st.c.style.width = w * N + 'px'; st.c.style.height = h * N + 'px';
+    st.w = w; st.h = h;
+
+    const left = el.classList.contains('canal--left');
+    const s = left ? 1 : -1;                               // which way the water crosses
+    const next = sec.nextElementSibling;
+    const last = !(next && next.querySelector(':scope > .canal'));
+    const margin = (sec.clientWidth - 1080) / 2 / N;       // gutter beside the text column
+    const wide = sec.clientWidth >= 1320;
+    const pts = [], bridges = [];
+    const TAU = Math.PI * 2;
+
+    if (wide) {
+      const R = 12, yb = h - R;
+      const xin = Math.round(left ? margin / 2 : w - margin / 2);
+      const xout = w - xin;
+      const sway = Math.max(0, Math.min(4, Math.floor(margin / 2 - 9)));
+      const run = yb - R, bends = Math.max(1, Math.round(run / 38));
+      const xv = (y) => xin + s * sway * Math.sin(Math.PI * bends * y / run);
+      for (let y = -4; y < run; y += 0.5) pts.push([xv(y), y]);
+      for (let t = 0; t <= 1; t += 0.03) {                 // sweep round into the crossing
+        const a = t * Math.PI / 2;
+        pts.push([xin + s * R - s * R * Math.cos(a), run + R * Math.sin(a)]);
+      }
+      const x0 = xin + s * R, x1 = last ? (s > 0 ? w + 12 : -12) : xout - s * R;
+      const len = Math.abs(x1 - x0), waves = Math.max(2, Math.round(len / 44));
+      const yh = (u) => yb + 2 * Math.sin(Math.PI * waves * u);
+      for (let d = 0; d <= len; d += 0.5) pts.push([x0 + s * d, yh(d / len)]);
+      if (!last) {
+        for (let t = 0; t <= 1; t += 0.03) {               // and round again to head down the far side
+          const a = t * Math.PI / 2;
+          pts.push([xout - s * R + s * R * Math.sin(a), yb + R - R * Math.cos(a)]);
+        }
+        for (let y = yb + R; y < h + 4; y += 0.5) pts.push([xout, y]);
+      }
+      const by = Math.round(run * 0.45);
+      if (run > 70) bridges.push([Math.round(xv(by)), by, false]);
+      bridges.push([Math.round(x0 + s * len * (last ? 0.4 : 0.5)), Math.round(yh(last ? 0.4 : 0.5)), true]);
+    } else {
+      const yb = h - 11, phase = left ? 0 : Math.PI;
+      const yh = (x) => yb + 3 * Math.sin(TAU * x / 56 + phase);
+      for (let d = -12; d <= w + 12; d += 0.5) { const x = s > 0 ? d : w - d; pts.push([x, yh(x)]); }
+      const bx = Math.round(w * (left ? 0.72 : 0.28));
+      bridges.push([bx, Math.round(yh(bx)), true]);
+    }
+
+    // nearest-point distance for every pixel near the course
+    const dist = new Float32Array(w * h).fill(99), down = new Uint8Array(w * h);
+    for (let i = 0; i < pts.length; i++) {
+      const [x, y] = pts[i], q = pts[Math.min(i + 1, pts.length - 1)], p = pts[Math.max(i - 1, 0)];
+      const isDown = Math.abs(q[1] - p[1]) >= Math.abs(q[0] - p[0]) ? 1 : 0;
+      const xa = Math.max(0, Math.floor(x - 8)), xb = Math.min(w - 1, Math.ceil(x + 8));
+      const ya = Math.max(0, Math.floor(y - 8)), yc = Math.min(h - 1, Math.ceil(y + 8));
+      for (let yy = ya; yy <= yc; yy++) for (let xx = xa; xx <= xb; xx++) {
+        const d = Math.hypot(xx + 0.5 - x, yy + 0.5 - y), k = yy * w + xx;
+        if (d < dist[k]) { dist[k] = d; down[k] = isDown; }
+      }
+    }
+    const layer = () => { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; };
+    st.maskDown = layer(); st.maskAcross = layer(); st.over = layer();
+    const gd = st.maskDown.getContext('2d'), ga = st.maskAcross.getContext('2d'), go = st.over.getContext('2d');
+    for (let k = 0; k < dist.length; k++) {
+      const d = dist[k];
+      if (d > 7) continue;
+      const x = k % w, y = (k - x) / w;
+      if (d <= 5) px(down[k] ? gd : ga, x, y, 1, 1, '#000');
+      else px(go, x, y, 1, 1, d <= 6 ? CANAL.bank : CANAL.edge);
+    }
+    bridges.forEach(([x, y, ns]) => drawBridge(go, x, y, ns));
+    st.dir = s;
+    paintCanal(st);
+  }
+
+  function paintCanal(st) {
+    const { g, w, h } = st;
+    if (scratch.width !== w || scratch.height !== h) { scratch.width = w; scratch.height = h; }
+    const t = scratch.getContext('2d');
+    g.clearRect(0, 0, w, h);
+    const flow = (mask, tile, ox, oy) => {
+      t.globalCompositeOperation = 'source-over';
+      t.clearRect(0, 0, w, h);
+      t.drawImage(mask, 0, 0);
+      t.globalCompositeOperation = 'source-in';
+      t.fillStyle = t.createPattern(tile, 'repeat');
+      t.save(); t.translate(ox, oy); t.fillRect(-ox, -oy, w, h); t.restore();
+      g.drawImage(scratch, 0, 0);
+    };
+    const k = canalStep % 64;
+    flow(st.maskDown, tileDown, 0, k);
+    flow(st.maskAcross, tileAcross, st.dir > 0 ? k : 64 - k, 0);
+    g.drawImage(st.over, 0, 0);
+  }
+
+  const canalWatch = 'IntersectionObserver' in window
+    ? new IntersectionObserver((es) => es.forEach((e) => { const st = canals.get(e.target); if (st) st.visible = e.isIntersecting; }), { rootMargin: '100px' })
+    : null;
+  let canalPending;
+  const canalSize = 'ResizeObserver' in window
+    ? new ResizeObserver(() => {                           // e.g. an FAQ opening makes its section taller
+        clearTimeout(canalPending);
+        canalPending = setTimeout(() => {
+          canals.forEach((st, el) => {
+            const sec = el.parentElement;
+            if (Math.ceil(sec.clientHeight / canalScale) !== st.h || Math.ceil(sec.clientWidth / canalScale) !== st.w) buildCanal(el, canalScale);
+          });
+        }, 60);
+      })
+    : null;
+
+  function drawCanals(N) {
+    canalScale = N;
+    if (!tileDown) { tileDown = waterTile(false); tileAcross = waterTile(true); }
+    document.querySelectorAll('.section > .canal').forEach((el) => buildCanal(el, N));
+  }
+
+  setInterval(() => {
+    if (document.hidden || still.matches) return;
+    canalStep++;
+    canals.forEach((st) => { if (st.visible) paintCanal(st); });
+  }, 250);
 
   /* ── Boot ─────────────────────────────────────────────────────── */
 
