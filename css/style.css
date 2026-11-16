@@ -330,6 +330,11 @@ h1 {
 
 /* Apply */
 .apply { background: var(--navy-900); border-top: var(--px) solid var(--purple-500); }
+/* the duck peeks over the top edge of the section */
+.duck {
+  position: absolute; z-index: 2; bottom: 100%; right: clamp(16px, 8vw, 140px);
+  width: clamp(110px, 16vw, 190px); height: auto; pointer-events: none;
+}
 
 /* Tito's widget is designed for a light page, so it sits on a pale panel */
 .tickets { background: #f4ecd8; color: #1a163f; --line: var(--window); padding: 20px; margin: 28px 0 16px; text-align: left; min-height: 120px; }
