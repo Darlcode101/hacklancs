@@ -304,6 +304,14 @@ h1 {
     40% calc(100% - var(--s) * 4), 40% calc(100% - var(--s) * 3), 30% calc(100% - var(--s) * 3), 30% calc(100% - var(--s) * 2),
     20% calc(100% - var(--s) * 2), 20% calc(100% - var(--s)), 10% calc(100% - var(--s)), 10% 100%, 0 100%);
 }
+/* partners: plain dark tiles so each logo sits on a clean background, per their brand rules */
+.partners { margin: 0 auto 40px; text-align: center; }
+.partners__title { font-size: 1.375rem; color: var(--muted); margin: 0 0 16px; }
+.partners__list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; }
+.partners__list li { flex: 0 1 280px; }
+.partner { display: grid; place-items: center; height: 112px; padding: 24px 32px; background: var(--navy-900); transition: transform .15s; }
+.partner:hover { transform: translateY(calc(var(--px) * -1)); }
+.partner img { display: block; max-width: 100%; max-height: 44px; width: auto; height: auto; }
 .banner--rose { --c: var(--accent); }
 .banner--gold { --c: var(--window); }
 .banner--teal { --c: #86c4ad; }
@@ -351,5 +359,5 @@ h1 {
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .btn, .dialogues summary::before { transition: none; }
+  .btn, .dialogues summary::before, .partner { transition: none; }
 }
