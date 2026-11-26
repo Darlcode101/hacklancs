@@ -32,7 +32,7 @@
     document.getElementById('tito-link').href = 'https://ti.to/' + TITO_EVENT;
     document.getElementById('apply-soon').hidden = true;
     document.getElementById('apply-tito').hidden = false;
-    document.querySelectorAll('a[href="#apply"]').forEach((a) => { a.textContent = 'Sign up'; });
+    document.querySelectorAll('a[data-cta]').forEach((a) => { a.href = '#apply'; a.textContent = 'Sign up'; });
   }
 
   document.getElementById('year').textContent = new Date().getFullYear();
