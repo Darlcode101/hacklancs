@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//HackLancs//HackLancs 2027//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:hacklancs-2027@hacklancs.com
+DTSTAMP:20261126T220000Z
+DTSTART;VALUE=DATE:20270306
+DTEND;VALUE=DATE:20270307
+SUMMARY:HackLancs 2027
+DESCRIPTION:Free 12-hour student hackathon at Lancaster University. Times and building to be confirmed: https://hacklancs.com/
+LOCATION:Lancaster University\, Bailrigg\, Lancaster LA1 4YW
+URL:https://hacklancs.com/
+END:VEVENT
+END:VCALENDAR
