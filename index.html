@@ -57,13 +57,12 @@
       "email": "hello@hacklancs.com",
       "sameAs": ["https://www.instagram.com/hacklancs/"]
     },
-    "performer": { "@type": "Organization", "name": "HackLancs" },
     "offers": {
       "@type": "Offer",
       "validFrom": "2026-11-12",
       "price": "0",
       "priceCurrency": "GBP",
-      "availability": "https://schema.org/InStock",
+      "availability": "https://schema.org/PreOrder",
       "url": "https://hacklancs.com/interest/"
     }
   }
@@ -87,12 +86,11 @@
     <nav class="nav__links" id="nav-links" aria-label="Main">
       <a href="#about">About</a>
       <a href="#schedule">Schedule</a>
-      <a href="#prizes">Prizes</a>
       <a href="#sponsors">Sponsors</a>
       <a href="#faq">FAQs</a>
       <a href="https://discord.gg/QNuVBameU" target="_blank" rel="noopener">Discord</a>
     </nav>
-    <a class="btn btn--primary btn--small nav__apply" href="#apply">Apply</a>
+    <a class="btn btn--primary btn--small nav__apply" href="interest/" data-cta>Register<span class="hide-sm"> interest</span></a>
   </header>
 
   <main>
@@ -104,9 +102,10 @@
         <p class="eyebrow">Lancaster's student hackathon</p>
         <h1>HackLancs</h1>
         <p class="hero__meta"><span>Lancaster University</span> <span class="dot" aria-hidden="true">·</span> <span><time datetime="2027-03-06">Saturday 6 March 2027</time></span></p>
+        <p class="hero__perks">Free <span class="dot" aria-hidden="true">·</span> 12 hours <span class="dot" aria-hidden="true">·</span> Any uni, any subject <span class="dot" aria-hidden="true">·</span> Food included</p>
         <p class="hero__tag">One day to build something worth showing.</p>
         <div class="hero__cta">
-          <a class="btn btn--primary" href="#apply">Apply</a>
+          <a class="btn btn--primary" href="interest/" data-cta>Register interest</a>
           <a class="btn btn--ghost" href="https://discord.gg/QNuVBameU" target="_blank" rel="noopener">Join the Discord</a>
           <a class="btn btn--ghost" href="#sponsors">Sponsor the event</a>
         </div>
@@ -121,7 +120,7 @@
         <div>
           <p class="eyebrow">Through the gate</p>
           <h2>About the event</h2>
-          <p class="lead">HackLancs is a new student hackathon at Lancaster University. Turn up with an idea or without one, find a team, and spend the day building something you'd be proud to demo.</p>
+          <p class="lead">HackLancs is a new student hackathon at Lancaster University, run by students in partnership with LU CompSoc. Turn up with an idea or without one, find a team, and spend the day building something you'd be proud to demo.</p>
           <p>Software, hardware, games, tools, something strange: if you can show it by the evening, it counts. There are mentors when you get stuck, workshops if you want to learn something new, and food so you never have to leave your flow.</p>
           <p>You don't need to have been to a hackathon before. Plenty of people ship their first ever project at one.</p>
         </div>
@@ -129,7 +128,7 @@
       <div class="wrap">
         <!-- TODO: confirm each of these before launch -->
         <ul class="facts">
-          <li class="px-box"><strong>One day</strong><span>From first idea to live demo</span></li>
+          <li class="px-box"><strong>12 hours</strong><span>From first idea to live demo</span></li>
           <li class="px-box"><strong>Free to attend</strong><span>Food and drink included</span></li>
           <li class="px-box"><strong>All skill levels</strong><span>First-timers very welcome</span></li>
         </ul>
@@ -142,23 +141,20 @@
       <div class="wrap">
         <p class="eyebrow">Follow the path</p>
         <h2>Schedule</h2>
-        <!-- TODO: replace this panel with the confirmed timetable (the .path list styles are still in style.css) -->
-        <div class="soon px-box">
-          <p class="soon__tag">Coming soon</p>
-          <p>We're still pinning down the timetable for <strong>Saturday 6 March 2027</strong>. Expect an opening ceremony, a full day of hacking with food and workshops, then demos, judging and prizes in the evening.</p>
-          <p class="note">The schedule will be posted here and in the Discord first.</p>
-          <a class="btn btn--ghost btn--small" href="https://discord.gg/QNuVBameU" target="_blank" rel="noopener">Join the Discord</a>
-        </div>
-        <ol class="path path--locked" aria-hidden="true">
-          <li class="key"><time>??:??</time><span>Checkpoint locked</span></li>
-          <li><time>??:??</time><span>Checkpoint locked</span></li>
-          <li class="key"><time>??:??</time><span>Checkpoint locked</span></li>
+        <!-- TODO: swap the outline for exact times once the running order is final (the .path styles are reused) -->
+        <p class="lead">Exact times are still being pinned down, but the shape of the day is set.</p>
+        <ol class="path">
+          <li class="key"><time>Morning</time><span>Doors open, opening ceremony and team forming</span></li>
+          <li><time>Daytime</time><span>Hacking, lunch, workshops and mentor help</span></li>
+          <li class="key"><time>Evening</time><span>Demos, judging, prizes and dinner</span></li>
         </ol>
+        <p class="note">The full timetable will be posted here and in the <a href="https://discord.gg/QNuVBameU" target="_blank" rel="noopener">Discord</a> first.</p>
       </div>
     </section>
 
     <!-- ───────────── Prizes: inventory panel ───────────── -->
-    <section class="section prizes" id="prizes">
+    <!-- Hidden until at least one prize is confirmed: remove `hidden` and restore the nav/footer links -->
+    <section class="section prizes" id="prizes" hidden>
       <div class="canal canal--left" aria-hidden="true"></div>
       <div class="wrap">
         <p class="eyebrow">The hoard</p>
@@ -183,6 +179,11 @@
         <p class="eyebrow">Hang your banner</p>
         <h2>Sponsors</h2>
         <p class="lead">HackLancs puts your team in a room with motivated student builders for a full day. Set a challenge, run a workshop, meet the people you'd like to hire.</p>
+        <ul class="sponsor-stats">
+          <li><strong>~100</strong><span>student hackers</span></li>
+          <li><strong>12 hours</strong><span>in the room with them</span></li>
+          <li><strong>From £500</strong><span>packages, or build your own</span></li>
+        </ul>
       </div>
       <div class="aqueduct">
         <canvas class="aqueduct__deck" data-strip="deck" aria-hidden="true"></canvas>
@@ -201,7 +202,9 @@
         </ul>
       </div>
       <div class="wrap center">
-        <a class="btn btn--primary" href="mailto:sponsors@hacklancs.com?subject=Sponsoring%20HackLancs">Get the sponsor pack</a>
+        <!-- TODO: add sponsor-pack.pdf to the repo and link it here directly -->
+        <a class="btn btn--primary" href="mailto:sponsors@hacklancs.com?subject=Sponsor%20pack%20request">Request the sponsor pack</a>
+        <p class="note">Or email <a href="mailto:sponsors@hacklancs.com">sponsors@hacklancs.com</a> and we'll get back to you.</p>
       </div>
     </section>
 
@@ -250,6 +253,26 @@
             <p>Anything you like, as long as you start it at the event. Whatever you build belongs to you and your team.</p>
           </details>
           <details class="px-box">
+            <summary>Is there a code of conduct?</summary>
+            <p>Yes. Everyone at HackLancs (attendees, mentors, sponsors and organisers) agrees to our <a href="code-of-conduct/">code of conduct</a>. If anything makes you uncomfortable on the day, talk to any organiser.</p>
+          </details>
+          <details class="px-box">
+            <summary>I'm coming from another university. How do I get there?</summary>
+            <p>Lancaster is on the West Coast Main Line, with direct trains from Manchester, Preston and Glasgow and easy connections from Leeds and York. From Lancaster station or the city centre, regular buses run to the Bailrigg campus. We'll share detailed directions once the building is confirmed.</p>
+          </details>
+          <details class="px-box">
+            <summary>I have dietary or accessibility requirements.</summary>
+            <p>Tell us when you apply and we'll plan around them. If you'd rather talk it through first, email <a href="mailto:hello@hacklancs.com">hello@hacklancs.com</a>.</p>
+          </details>
+          <details class="px-box">
+            <summary>How many places are there?</summary>
+            <p>Places are limited by the size of the venue. Register your interest and you'll hear as soon as applications open.</p>
+          </details>
+          <details class="px-box">
+            <summary>Will there be photos?</summary>
+            <p>Yes, there will be a photographer on the day. If you'd rather not appear in photos, tell an organiser at registration.</p>
+          </details>
+          <details class="px-box">
             <summary>I have another question.</summary>
             <p>Email <a href="mailto:hello@hacklancs.com">hello@hacklancs.com</a> and we'll get back to you.</p>
           </details>
@@ -269,6 +292,7 @@
           <a class="btn btn--primary" href="interest/">Register interest</a>
           <a class="btn btn--ghost" href="https://discord.gg/QNuVBameU" target="_blank" rel="noopener">Join the Discord</a>
         </div>
+        <p class="note">We only use your details to contact you about HackLancs, and never share them.</p>
       </div>
       <!-- Shown once a Tito event is set: sign-up happens here through Tito -->
       <div class="wrap wrap--narrow center" id="apply-tito" hidden>
@@ -285,14 +309,15 @@
     <div class="wrap footer__grid">
       <div>
         <p class="nav__logo">HackLancs</p>
-        <p>A student hackathon at Lancaster University.</p>
+        <p>A student hackathon at Lancaster University, in partnership with LU CompSoc.</p>
       </div>
       <nav aria-label="Footer">
         <a href="#about">About</a>
         <a href="#schedule">Schedule</a>
-        <a href="#prizes">Prizes</a>
-        <a href="#sponsors">Sponsors</a>
+          <a href="#sponsors">Sponsors</a>
         <a href="#faq">FAQs</a>
+        <a href="code-of-conduct/">Code of conduct</a>
+        <a href="mailto:sponsors@hacklancs.com">Sponsor us</a>
       </nav>
       <div>
         <a href="mailto:hello@hacklancs.com">hello@hacklancs.com</a><br>
