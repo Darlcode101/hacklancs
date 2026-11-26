@@ -521,12 +521,16 @@
     st.c.style.width = w * N + 'px'; st.c.style.height = h * N + 'px';
     st.w = w; st.h = h;
 
-    const left = el.classList.contains('canal--left');
+    // Work from the sections actually on screen, so hiding one (e.g. prizes) keeps the course joined up.
+    const shown = (n) => n && !n.hidden && n.getClientRects().length > 0;
+    const sib = (n, dir) => { do n = n[dir]; while (n && !shown(n)); return n; };
+    let idx = 0;                                           // position in this unbroken run of canal sections
+    for (let p = sib(sec, 'previousElementSibling'); p && p.querySelector(':scope > .canal'); p = sib(p, 'previousElementSibling')) idx++;
+    const left = idx % 2 === 0;
     const s = left ? 1 : -1;                               // which way the water crosses
-    const next = sec.nextElementSibling;
+    const next = sib(sec, 'nextElementSibling');
     const last = !(next && next.querySelector(':scope > .canal'));
-    const prev = sec.previousElementSibling;
-    const first = !(prev && prev.querySelector(':scope > .canal'));   // nothing upstream: enter from the page edge
+    const first = idx === 0;                               // nothing upstream: enter from the page edge
     const margin = (sec.clientWidth - 1080) / 2 / N;       // gutter beside the text column
     const wide = sec.clientWidth >= 1320;
     const pts = [], bridges = [];
@@ -668,9 +672,11 @@
   drawSprites(scene.scale());
 
   let lastW = innerWidth, lastH = innerHeight, pending;
+  const touch = matchMedia('(pointer: coarse)');
   addEventListener('resize', () => {
-    // ignore the small height changes mobile browsers make when the URL bar hides
-    if (innerWidth === lastW && Math.abs(innerHeight - lastH) < 120) return;
+    // on phones, ignore the small height changes the browser makes when the URL bar hides;
+    // on desktop a small height change is real (e.g. going fullscreen) and needs a redraw
+    if (touch.matches && innerWidth === lastW && Math.abs(innerHeight - lastH) < 120) return;
     clearTimeout(pending);
     pending = setTimeout(() => {
       lastW = innerWidth; lastH = innerHeight;
